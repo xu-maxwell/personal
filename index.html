@@ -327,22 +327,28 @@
       const PortfolioGrid = () => {
         const images = [
           {
-            src: "mx_pfp.jpg",
+            src: "mx_pfp.jpg", // Ensure this path is correct
             alt: "Max on a hilly street in San Francisco",
             type: "image",
-            className: "col-span-2 h-72 md:h-96",
+            // OLD: className: "col-span-2 h-72 md:h-96",
+            className: "h-72 md:col-span-2 md:h-96", // NEW
+            // On mobile: h-72 (implicit col-span-1)
+            // On md+: md:col-span-2 md:h-96
           },
           {
-            src: "max-bowl.mp4", // Changed from .gif to .mp4
+            src: "max-bowl.mp4", // Ensure this path is correct & you have a poster if needed
             alt: "Max bowling",
-            type: "video", // Added type
-            className: "col-span-2 md:col-span-1 h-72",
+            type: "video",
+            // OLD: className: "col-span-2 md:col-span-1 h-72",
+            className: "h-72 md:col-span-1", // NEW (h-72 applies to all sizes)
+            // On mobile: h-72 (implicit col-span-1)
+            // On md+: h-72 md:col-span-1
           },
           {
-            src: "max-golf.mp4", // Changed from .gif to .mp4
+            src: "max-golf.mp4", // Ensure this path is correct & you have a poster if needed
             alt: "Max golfing",
-            type: "video", // Added type
-            className: "h-72",
+            type: "video",
+            className: "h-72", // This was likely fine as it has no mobile col-span issue
           },
         ];
         return (
