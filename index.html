@@ -50,6 +50,23 @@
     <script type="text/babel">
       const { useState, StrictMode, useEffect } = React;
 
+      const calculateYearsSince = (year, month, day) => {
+        const startDate = new Date(year, month - 1, day); // month - 1 because Date months are 0-indexed
+        const today = new Date();
+
+        const timeDifferenceInMilliseconds =
+          today.getTime() - startDate.getTime();
+
+        // Average milliseconds in a year (using 365.2425 days for more accuracy with leap years)
+        const millisecondsPerYear = 1000 * 60 * 60 * 24 * 365.2425;
+
+        const ageInYearsWithFraction =
+          timeDifferenceInMilliseconds / millisecondsPerYear;
+
+        // Format the number to two decimal places and return it as a string
+        return ageInYearsWithFraction.toFixed(2);
+      };
+
       // --- SVG Icons (Lucide Replacements) ---
       const MoonIcon = ({ className }) => (
         <svg
@@ -294,6 +311,7 @@
       const Stats = ({ currentTheme }) => {
         const textColorClass =
           currentTheme === "dark" ? "text-gray-500" : "text-gray-600";
+        const yearsOnEarth = calculateYearsSince(2005, 7, 9); // (Year, Month, Day
         return (
           <section className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="flex flex-col">
@@ -301,7 +319,7 @@
               <span className={`${textColorClass} text-sm`}>
                 Experience (on Earth)
               </span>
-              <span className="mt-1 font-medium">19 years</span>{" "}
+              <span className="mt-1 font-medium">{yearsOnEarth} years</span>{" "}
               {/* Inherits main text color */}
             </div>
             <div className="flex flex-col">
