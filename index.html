@@ -574,6 +574,84 @@
         );
       };
 
+      // --- UPDATED Cal.com EMBED COMPONENT ---
+      const CalEmbed = ({ currentTheme }) => {
+        useEffect(() => {
+          // This IIFE pattern is from Cal.com. It ensures the Cal function is defined
+          // and loads the external script if it hasn't been loaded yet.
+          // It's safe to call this multiple times.
+          (function (C, A, L) {
+            let p = function (a, ar) {
+              a.q.push(ar);
+            };
+            let d = C.document;
+            C.Cal =
+              C.Cal ||
+              function () {
+                let cal = C.Cal;
+                let ar = arguments;
+                if (!cal.loaded) {
+                  cal.ns = {};
+                  cal.q = cal.q || [];
+                  d.head.appendChild(d.createElement("script")).src = A;
+                  cal.loaded = true;
+                }
+                if (ar[0] === L) {
+                  const api = function () {
+                    p(api, arguments);
+                  };
+                  const namespace = ar[1];
+                  api.q = api.q || [];
+                  if (typeof namespace === "string") {
+                    cal.ns[namespace] = cal.ns[namespace] || api;
+                    p(cal.ns[namespace], ar);
+                    p(cal, ["initNamespace", namespace]);
+                  } else p(cal, ar);
+                  return;
+                }
+                p(cal, ar);
+              };
+          })(window, "https://app.cal.com/embed/embed.js", "init");
+
+          // Initialize Cal.com. This is also safe to call multiple times.
+          Cal("init", "30min", { origin: "https://app.cal.com" });
+
+          // Configure the inline embed. This tells Cal where to render the calendar.
+          Cal.ns["30min"]("inline", {
+            elementOrSelector: "#my-cal-inline-30min",
+            config: { layout: "month_view" },
+            calLink: "maxwellxu/30min",
+          });
+
+          // Configure the UI. This is the part that needs to be updated when the theme changes.
+          // By placing it in a useEffect hook that depends on `currentTheme`, this command
+          // is re-sent every time the theme toggles.
+          Cal.ns["30min"]("ui", {
+            theme: currentTheme, // Dynamically set the theme
+            cssVarsPerTheme: {
+              light: { "cal-brand": "#292929" },
+              dark: { "cal-brand": "#FFFFFF" },
+            },
+            hideEventTypeDetails: false,
+            layout: "month_view",
+          });
+        }, [currentTheme]); // The key part: re-run the effect when `currentTheme` changes.
+
+        return (
+          <section className="mt-20">
+            <h2 className="text-2xl font-bold mb-8">Book a Meeting</h2>
+            {/* The container div for the embed. Adjusted style for better sizing. */}
+            <div
+              style={{
+                width: "96%",
+                margin: "0 auto",
+              }}
+              id="my-cal-inline-30min"
+            ></div>
+          </section>
+        );
+      };
+
       // Testimonial and Award components are not used in App, so left as is for now.
       // If you plan to use them, they will also need currentTheme prop for styling.
 
@@ -627,6 +705,7 @@
                 {/* No theme-dependent text styles identified here */}
                 <WorkExperience currentTheme={currentTheme} />
                 <Services currentTheme={currentTheme} />
+                <CalEmbed currentTheme={currentTheme} />
               </main>
               {/* MODIFIED: Pass currentTheme to Footer */}
               <Footer currentTheme={currentTheme} />
