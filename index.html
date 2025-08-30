@@ -680,6 +680,22 @@
       const App = () => {
         const [currentTheme, setCurrentTheme] = useState("dark");
 
+        // --- ADD THIS CODE SNIPPET ---
+        useEffect(() => {
+          // Check if the URL has a hash tag
+          if (window.location.hash) {
+            // Remove the '#' from the hash to get the id
+            const id = window.location.hash.substring(1);
+            const element = document.getElementById(id);
+
+            // If the element is found, scroll to it smoothly
+            if (element) {
+              element.scrollIntoView({ behavior: "smooth" });
+            }
+          }
+        }, []); // The empty array ensures this runs only once when the page loads
+        // --- END OF SNIPPET ---
+
         const toggleTheme = () => {
           setCurrentTheme((prevTheme) =>
             prevTheme === "dark" ? "light" : "dark"
